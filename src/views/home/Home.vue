@@ -1,10 +1,13 @@
 <template>
   <div id="home">
-    <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
+    <nav-bar class="home-nav">
+      <div slot="center">购物街</div>
+    </nav-bar>
     <home-swiper :banners="banners" />
     <recommend-view :recommends="recommends" />
     <feature-view />
     <tab-control class="tab-control" :titles="['流行', '新款', '精选']" />
+    <!-- <goods-list :goods="goods['pop'].list" /> -->
     <ul>
       <li>列表1</li>
       <li>列表2</li>
@@ -111,64 +114,86 @@
 </template>
 
 <script>
-  import HomeSwiper from '@/views/home/childComps/HomeSwiper'
-  import RecommendView from '@/views/home/childComps/RecommendView'
-  import FeatureView from '@/views/home/childComps/FeatureView'
+import HomeSwiper from "@/views/home/childComps/HomeSwiper";
+import RecommendView from "@/views/home/childComps/RecommendView";
+import FeatureView from "@/views/home/childComps/FeatureView";
 
-  import NavBar from 'components/common/navbar/NavBar'
-  import TabControl from '@/components/content/tabControl/TabControl'
+import NavBar from "components/common/navbar/NavBar";
+import TabControl from "@/components/content/tabControl/TabControl";
+import GoodsList from 'components/content/goods/GoodsList'
 
-  import {getHomeMultidata} from "network/home";
-  // import Swiper from 'components/common/swiper/Swiper'
-  // import SwiperItem from 'components/common/swiper/SwiperItem'
+import { getHomeMultidata, getHomeGoods } from "network/home";
+// import Swiper from 'components/common/swiper/Swiper'
+// import SwiperItem from 'components/common/swiper/SwiperItem'
 
-
-  export default {
-      name: 'Home',
-      components: {
-        HomeSwiper,
-        RecommendView,
-        FeatureView,
-        NavBar,
-        TabControl
+export default {
+  name: "Home",
+  components: {
+    HomeSwiper,
+    RecommendView,
+    FeatureView,
+    NavBar,
+    TabControl,
+    GoodsList
+  },
+  data() {
+    return {
+      banners: [],
+      recommends: [],
+      goods: {
+        pop: { page: 0, list: [] },
+        new: { page: 0, list: [] },
+        sell: { page: 0, list: [] },
       },
-      data () {
-        return {
-            banners: [],
-            recommends: []
-        }
-      },
-      created () {
-        // 1.请求多个数据
-        getHomeMultidata().then(res => {
-          // console.log(res);
-          // this.result = res
-          this.banners = res.data.data.banner.list;
-          this.recommends = res.data.data.recommend.list;
-        })
-      }
-  }
+    };
+  },
+  created() {
+    // 1.请求多个数据
+    this.getHomeMultidata();
+
+    // 2.请求商品数据
+    this.getHomeGoods('pop');
+    this.getHomeGoods('new');
+    this.getHomeGoods('sell');
+  },
+  methods: {
+    getHomeMultidata() {
+      getHomeMultidata().then((res) => {
+        // this.result = res
+        this.banners = res.data.data.banner.list;
+        this.recommends = res.data.data.recommend.list;
+      });
+    },
+    getHomeGoods(type) {
+      const page = this.goods[type].page + 1
+      getHomeGoods(type, page).then((res) => {
+        this.goods[type].list.push(...res.data.data.list)
+        this.goods[type].page += 1
+      });
+    },
+  },
+};
 </script>
 
 <style>
-  #home {
-    padding-top: 44px;
-  }
+#home {
+  padding-top: 44px;
+}
 
-  .home-nav {
-    background-color: var(--color-tint);
-    color: #fff;
+.home-nav {
+  background-color: var(--color-tint);
+  color: #fff;
 
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 9;
-  }
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 9;
+}
 
-  .tab-control {
-    position: sticky;
-    top: 44px;
-  }
-
+.tab-control {
+  position: sticky;
+  top: 44px;
+  z-index: 19;
+}
 </style>
