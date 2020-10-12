@@ -24,7 +24,7 @@
 </script>
 
 <style scoped>
-  /* .goods-item {
+  .goods-item {
     padding-bottom: 40px;
     position: relative;
 
@@ -48,6 +48,7 @@
   }
 
   .goods-info p {
+    /* 让文字在一行显示 多余的以...展示 */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -71,6 +72,6 @@
     width: 14px;
     height: 14px;
     background: url("~assets/img/common/collect.svg") 0 0/14px 14px;
-  } */
+  }
 
 </style>

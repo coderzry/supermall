@@ -1,7 +1,7 @@
 <template>
     <div class="goods">
       <goods-list-item v-for="item in goods" :goods-item="item" />
-      {{goods}}
+      
     </div>
 </template>
 
@@ -24,12 +24,12 @@
 </script>
 
 <style scoped>
-  /* .goods {
+  .goods {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     background-color: var(--color-background);
 
     padding: 2px;
-  } */
+  }
 </style>
